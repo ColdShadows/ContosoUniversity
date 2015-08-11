@@ -37,10 +37,23 @@ namespace ContosoUniversity.Controllers
                 i => i.ID == id.Value).Single().Courses;
             }
             if (courseID != null)
-            {
+            {                
                 ViewBag.CourseID = courseID.Value;
-                viewModel.Enrollments = viewModel.Courses.Where(
-                x => x.CourseID == courseID).Single().Enrollments;
+                //Lazy Loading
+                /*viewModel.Enrollments = viewModel.Courses.Where(
+                x => x.CourseID == courseID).Single().Enrollments;*/
+
+                //Explicit Loading
+               var selectedCourse =  viewModel.Courses.Where(x => x.CourseID == courseID.Value).Single();
+               db.Entry(selectedCourse).Collection(x => x.Enrollments).Load();
+
+                foreach( Enrollment e in selectedCourse.Enrollments)
+                {
+                    db.Entry(e).Reference(x => x.Student).Load();
+                }
+
+                viewModel.Enrollments = selectedCourse.Enrollments;
+
             }
             return View(viewModel);
         }
