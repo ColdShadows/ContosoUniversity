@@ -12,10 +12,12 @@ namespace ContosoUniversity.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            
         }
 
         protected override void Seed(SchoolContext context)
         {
+           
             var students = new List<Student>
 {
 new Student { FirstMidName = "Carson", LastName = "Alexander",
